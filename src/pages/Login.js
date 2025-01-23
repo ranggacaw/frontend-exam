@@ -19,7 +19,7 @@ function Login() {
     setError('');
 
     try {
-      const response = await axios.post('https://b02c-182-253-48-10.ngrok-free.app/api/auth/login', {
+      const response = await axios.post('http://localhost:3001/auth/login', {
         email,
         password,
       });

@@ -31,7 +31,7 @@ function Register() {
     }
 
     try {
-      await axios.post('https://b02c-182-253-48-10.ngrok-free.app/api/auth/register', { email, name, password }, 
+      await axios.post('http://localhost:3001/auth/register', { email, name, password }, 
       {
         headers: { 'Content-Type': 'application/json' }
       }); 
