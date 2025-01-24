@@ -7,7 +7,8 @@ import axios from 'axios';
 const AddContent = () => {
   const [form, setForm] = useState({
     title: '',
-    userId: null, // Initially null until dynamically set
+    content: '',
+    user_id: null, // Initially null until dynamically set
   });
 
   const [error, setError] = useState({});
@@ -18,10 +19,11 @@ const AddContent = () => {
   // Simulate dynamic userId (Replace with your authentication logic)
   useEffect(() => {
     const fetchUserId = async () => {
-      // Simulate fetching user data; replace with actual logic
-      const userId = 3; // Example: Replace with dynamic user ID
-      setForm((prevForm) => ({ ...prevForm, userId }));
+      const id = localStorage.getItem("user_id");
+      const user_id = id; // Example: Replace with dynamic user ID
+      setForm((prevForm) => ({ ...prevForm, user_id }));
     };
+
     fetchUserId();
   }, []);
 
@@ -35,8 +37,13 @@ const AddContent = () => {
       valid = false;
     }
 
-    if (!form.userId) {
-      newError.userId = 'User ID is not set'; // Validation for userId
+    if (!form.content) {
+      newError.content = 'Content is required';
+      valid = false;
+    }
+
+    if (!form.user_id) {
+      newError.user_id = 'User ID is not set'; // Validation for userId
       valid = false;
     }
 
@@ -51,11 +58,17 @@ const AddContent = () => {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    
+    const token = localStorage.getItem("token");
 
     try {
       // Send data as JSON
-      await axios.post('http://localhost:3001/todos/', form, {
-        headers: { 'Content-Type': 'application/json' },
+      // await axios.post('http://localhost:3001/todos/', form, {
+      await axios.post('https://b02c-182-253-48-10.ngrok-free.app/api/article', form, {
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       setIsModalOpen(true); // Show success modal
@@ -103,6 +116,23 @@ const AddContent = () => {
                 placeholder="Enter the title here"
               />
               {error.title && <p className="mt-2 text-sm text-red-600">{error.title}</p>}
+            </div>
+
+            {/* Content Textarea */}
+            <div>
+              <label htmlFor="content" className="block text-lg font-medium text-gray-700 mb-2">
+                Content
+              </label>
+              <textarea
+                id="content"
+                name="content"
+                value={form.content}
+                onChange={handleChange}
+                rows="8"
+                className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-base"
+                placeholder="Enter content here"
+              ></textarea>
+              {error.content && <p className="mt-2 text-sm text-red-600">{error.content}</p>}
             </div>
 
             {/* Submit Button */}

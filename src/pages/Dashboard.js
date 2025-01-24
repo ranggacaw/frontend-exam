@@ -9,13 +9,31 @@ const Dashboard = () => {
   // Fetching data dari table todos
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get('http://localhost:3001/todos/');
-      setDataContent(response.data);
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          'https://b02c-182-253-48-10.ngrok-free.app/api/article',
+          {
+            headers: {
+              'ngrok-skip-browser-warning': '1', // Additional header
+              Authorization: `Bearer ${token}`, // Bearer token
+            },
+          }
+        );
+  
+        // Debugging response
+        console.log('API Response:', response.data.data.data);
+  
+        // Ensure the data is an array before setting it
+        setDataContent(Array.isArray(response.data.data.data) ? response.data.data.data : []);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
-
+  
     fetchData();
   }, []);
-
+  
   return (
     <div>
       <Navbar/>
@@ -26,13 +44,13 @@ const Dashboard = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {dataContent.length > 0 ? (
-              dataContent.map((isicontent) => (
+              dataContent.map(item => (
                 <div
-                  key={isicontent.id}
+                  key={item.id}
                   className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
                 >
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">{isicontent.title}</h3>
-                  <p>{isicontent.content}</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">{item.title}</h3>
+                  <p>{item.content}</p>
                 </div>
               ))
             ) : (
