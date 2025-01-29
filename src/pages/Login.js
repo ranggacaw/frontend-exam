@@ -19,7 +19,6 @@ function Login() {
   // Untuk ngecek token di local storage
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const user_id = localStorage.getItem("user_id");
     
     if (token) {
       setIsLoggedIn(true);
@@ -31,15 +30,14 @@ function Login() {
     setError('');
 
     try {
-      // const response = await axios.post('http://localhost:3001/auth/login', {
-      const response = await axios.post('https://b02c-182-253-48-10.ngrok-free.app/api/auth/login', {
+      const response = await axios.post('http://localhost:3001/auth/login', {
         email,
         password,
       });
 
-      if (response.data.status) {
+      if (response.data) {
         const token = response.data.token;
-        const user_id = response.data.id;
+        const user_id = response.data.user_id;
         
         localStorage.setItem("token", token); 
         localStorage.setItem("user_id", user_id); 
@@ -50,10 +48,6 @@ function Login() {
       } else {
         alert("Login failed!");
       }
-
-      // Simpan token ke localStorage
-      // const { token } = response.data;
-      // localStorage.setItem('token', token);
 
       // Redirect ke dashboard
       navigate('/');

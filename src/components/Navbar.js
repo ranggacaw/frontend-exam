@@ -1,12 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = ({ isLoggedIn, onLogout }) => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    // untuk ngecek kalo ada token di local storage
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token from localStorage
+    setIsLoggedIn(false); // Update logged-out state
+  }
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 sticky top-0 z-50 shadow-md">
@@ -75,7 +90,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
             <li>
               {isLoggedIn ? (
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >
                   Logout

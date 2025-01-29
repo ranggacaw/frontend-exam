@@ -8,7 +8,7 @@ const AddContent = () => {
   const [form, setForm] = useState({
     title: '',
     content: '',
-    user_id: null, // Initially null until dynamically set
+    userId: null, // Initially null until dynamically set
   });
 
   const [error, setError] = useState({});
@@ -18,14 +18,16 @@ const AddContent = () => {
 
   // Simulate dynamic userId (Replace with your authentication logic)
   useEffect(() => {
-    const fetchUserId = async () => {
-      const id = localStorage.getItem("user_id");
-      const user_id = id; // Example: Replace with dynamic user ID
-      setForm((prevForm) => ({ ...prevForm, user_id }));
-    };
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("user_id");
 
-    fetchUserId();
-  }, []);
+    // Redirect to login page kalo token nya ga ada
+    if (!token){
+      navigate('/login');
+    } else {
+      setForm((prevForm) => ({ ...prevForm, userId: id }));
+    }
+  }, [navigate]);
 
   // Validate form inputs
   const validateForm = () => {
@@ -42,8 +44,8 @@ const AddContent = () => {
       valid = false;
     }
 
-    if (!form.user_id) {
-      newError.user_id = 'User ID is not set'; // Validation for userId
+    if (!form.userId) {
+      newError.userId = 'User ID is not set'; // Validation for userId
       valid = false;
     }
 
@@ -56,17 +58,13 @@ const AddContent = () => {
     e.preventDefault();
 
     if (!validateForm()) return;
-
     setIsSubmitting(true);
-    
     const token = localStorage.getItem("token");
 
     try {
-      // Send data as JSON
-      // await axios.post('http://localhost:3001/todos/', form, {
-      await axios.post('https://b02c-182-253-48-10.ngrok-free.app/api/article', form, {
+      await axios.post('http://localhost:3001/todos/', form, {
         headers: { 
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });

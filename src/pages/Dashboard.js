@@ -12,7 +12,7 @@ const Dashboard = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          'https://b02c-182-253-48-10.ngrok-free.app/api/article',
+          'http://localhost:3001/todos/',
           {
             headers: {
               'ngrok-skip-browser-warning': '1', // Additional header
@@ -22,10 +22,10 @@ const Dashboard = () => {
         );
   
         // Debugging response
-        console.log('API Response:', response.data.data.data);
+        console.log('API Response:', response.data);
   
         // Ensure the data is an array before setting it
-        setDataContent(Array.isArray(response.data.data.data) ? response.data.data.data : []);
+        setDataContent(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
