@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const AddContent = () => {
   const [form, setForm] = useState({
@@ -16,14 +17,21 @@ const AddContent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  // Simulate dynamic userId (Replace with your authentication logic)
+  // Kalo ga ada token, gabisa masuk page addcontent, harus login dulu
   useEffect(() => {
     const token = localStorage.getItem("token");
     const id = localStorage.getItem("user_id");
 
     // Redirect to login page kalo token nya ga ada
     if (!token){
-      navigate('/login');
+      Swal.fire({
+        title: "You need to login first!",
+        text: "Please login to access this page.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate('/login');
+      })
     } else {
       setForm((prevForm) => ({ ...prevForm, userId: id }));
     }

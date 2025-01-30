@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
+import Swal from 'sweetalert2';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -31,13 +32,17 @@ function Register() {
     }
 
     try {
-      // await axios.post('http://localhost:3001/auth/register', { email, name, password }, 
-      await axios.post('https://b02c-182-253-48-10.ngrok-free.app/api/auth/register', { email, name, password }, 
+      await axios.post('http://localhost:3001/auth/register', { email, name, password }, 
       {
         headers: { 'Content-Type': 'application/json' }
       }); 
 
-      alert('Registration successful!');
+      Swal.fire({
+        title: "Success!",
+        text: "Please login to access this page.",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
 
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);

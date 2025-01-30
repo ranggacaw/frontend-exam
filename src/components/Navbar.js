@@ -21,6 +21,8 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token from localStorage
     setIsLoggedIn(false); // Update logged-out state
+
+    window.location.reload();
   }
 
   return (

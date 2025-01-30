@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
+import Swal from 'sweetalert2';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -42,8 +43,14 @@ function Login() {
         localStorage.setItem("token", token); 
         localStorage.setItem("user_id", user_id); 
         setIsLoggedIn(true); 
-        alert(response.data.message);
-        console.log("user nya: ", user_id);
+
+        Swal.fire({
+          title: "Yeah Dude!",
+          text: response.data.message,
+          icon: "success",
+          confirmButtonText: "OK",
+        })
+        // console.log("user nya: ", user_id);
         
       } else {
         alert("Login failed!");
